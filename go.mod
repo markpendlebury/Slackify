@@ -2,7 +2,7 @@ module github.com/markpendlebury/slackify
 
 go 1.18
 
-require github.com/zmb3/spotify/v2 v2.2.1
+require github.com/zmb3/spotify/v2 v2.3.0
 
 require (
 	github.com/golang/protobuf v1.5.2 // indirect
