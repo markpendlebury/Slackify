@@ -1,8 +1,8 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -60,15 +60,32 @@ func setSlackStatus(status string, delay int) {
 	defer res.Body.Close()
 
 	// Read the response body:
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
+	// body, err := ioutil.ReadAll(res.Body)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+
+	var sr SlackResponse
+
+	derp := json.NewDecoder(res.Body).Decode(&sr)
+
+	if !sr.Ok {
+		fmt.Println("Error updating slack status: ")
+
+		if sr.Error == "ratelimited" {
+			time.Sleep(30000)
+		}
+		fmt.Println(sr.Error)
+	}
+
+	if derp != nil {
 		fmt.Println(err)
-		return
 	}
 
 	// This needs improvement, currently just swalling the response
 	// We should read the response and handle any errors here:
-	fmt.Sprintf("%s", body)
+	// fmt.Sprintf("%s", body)
 
 }
 
