@@ -9,15 +9,37 @@ Example:
 # Getting Started:
 In order for slackify to update your Slack status you will need to create an application within the slack space you want to update your status in: 
 
-1. Click this button to add the slack app to your slack space: 
-  <a href="https://slack.com/oauth/v2/authorize?client_id=4089515761430.4096027862115&scope=incoming-webhook&user_scope=users.profile:write"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>  
-2. Generate an o-auth access key: 
-  
-  
-  
+**Instuctions for this process coming soon**
 
+Once you have this setup you'll need to: 
+```
+export SLACK_TOKEN=xxxxxxxx
+```
+
+
+# Usage
+1. Download the correct binary for your architecture from the [releases](https://github.com/markpendlebury/Slackify/releases) page
+2. Place the binary in a location accessible by your `$PATH` usually somewhere like `/usr/local/bin` for example
+3. run `slackify` from a terminal, it will attempt to open a web browser and you will be required to sign into spotify (if you're not already signed in) 
+  If not there's a url provided, simply copy & paste this url into your web browser and sign into slack manually
+
+Start listening via spotify. 
+
+*note*
+Because we're using the spotify API, you don't need to listen on the same device as slackify :wink:
+  
 # Changelog:
-
+- v0.2-alpha 
+  - Added readme
+  - General improvements to main.go 
+  - Added a timestamp output to help debug [this](https://github.com/markpendlebury/Slackify/issues/8) issue
+  - Added nil check to GetCurrentlyPlaying
   
+- V0.1-alpha 
+  - Initial release
 
-V0.1.0 - Initial release
+
+
+# Known issues and bug reporting
+
+Please use githubs [issue tracker](https://github.com/markpendlebury/Slackify/issues) to report any issues/bugs or make any suggestions you may have

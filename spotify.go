@@ -9,10 +9,15 @@ import (
 func GetCurrentlyPlaying(client *spotify.Client) *spotify.CurrentlyPlaying {
 
 	// Use our spotify client to get the currently playing track data:
-	currentlyPlaying, err := client.PlayerCurrentlyPlaying(context.Background())
-	if err != nil {
-		println(err.Error())
+	if client != nil {
+		currentlyPlaying, err := client.PlayerCurrentlyPlaying(context.Background())
+		if err != nil {
+			println(err.Error())
+		}
+
+		return currentlyPlaying
 	}
 
-	return currentlyPlaying
+	return nil
+
 }

@@ -13,6 +13,10 @@ const slackProfileEndpoint = "https://slack.com/api/users.profile.set"
 
 func setSlackStatus(status string, delay int) {
 
+	now := time.Now()
+	output := fmt.Sprintf("[%s] Settings Slack status to: %s", now.Format("15:04:05"), status)
+
+	fmt.Println(output)
 	// Get an expiry time in unix time format
 	expiry := GetExpiryTime(delay)
 
