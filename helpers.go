@@ -21,7 +21,7 @@ var (
 		spotifyauth.WithClientID(os.Getenv("SPOTIFY_CLIENT_ID")),
 		spotifyauth.WithClientSecret(os.Getenv("SPOTIFY_CLIENT_SECRET")))
 	ch    = make(chan *spotify.Client)
-	state = "abc123"
+	state = "fd342dd83b219b5a6f6438b0dd588b12"
 )
 
 // This function creates a http server and awaits for a

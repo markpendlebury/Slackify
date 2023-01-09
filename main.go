@@ -27,8 +27,8 @@ func main() {
 	// Begin listening for track changes:
 
 	for {
-		// initialie delay in miliseconds
-		var delay int = 30000
+		// initialie sleep in miliseconds
+		var sleep int = 300000
 
 		// Get currentlyPlaying data from spotify:
 		currentlyPlaying := GetCurrentlyPlaying(client)
@@ -39,29 +39,33 @@ func main() {
 				status := fmt.Sprintf("Currently Listening to: %s - %s", currentlyPlaying.Item.Artists[0].Name, currentlyPlaying.Item.Name)
 
 				// Get the progress (current timestamp) of the track we're listening to:
-				progress := currentlyPlaying.Progress
+				// progress := currentlyPlaying.Progress
 				// Get the full length of the track we're listening to:
 				length := currentlyPlaying.Item.Duration
 
 				// Get the time remaining of the track in miliseconds
-				delay = length - progress + 3
+				delay := length + 3
 
 				// Output to terminal our current status, here \r ensures only use a single line
-				fmt.Printf("\r " + status)
+				// fmt.Printf("\r " + status)
 
 				// Send our status to slack:
 				setSlackStatus(status, delay)
+			} else {
+				// We're not listening to anything, Tell the user;
+				fmt.Printf("\r Nothing playing...")
 			}
-
-		} else {
-			// We're not listening to anything, Tell the user;
-			fmt.Printf("\r Nothing playing...")
 		}
 
 		// Here we sleep for the above calculated delay plus 2 seconds
 		// This helps reduce the chances of hitting spotify's rate limits
 		// whilst at the same time keeping the slack updates as accurage
 		// as possible, open to ideas for a better solution to this:
-		time.Sleep(time.Duration(delay)*time.Millisecond + time.Duration(2))
+
+		// now := time.Now()
+		// output := fmt.Sprintf("[%s] - Sleeping for: %d", now.Format("15:04:05"), sleep)
+		// fmt.Println(output)
+		time.Sleep(time.Duration(sleep) * time.Millisecond)
+		// time.Sleep(time.Duration(delay)*time.Millisecond + time.Duration(2))
 	}
 }
