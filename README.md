@@ -3,7 +3,7 @@
 Slackify is a local client used to query Spotify and get your currently listening to track and update your status within Slack.
 
 Example: <br>
-![enter image description here](https://user-images.githubusercontent.com/63231900/194503307-cd64595d-1ab8-40dd-aa0a-b55728512d6a.png)
+![enter image description here](https://user-images.githubusercontent.com/63231900/211337042-b812ded7-9a24-4d28-b4b9-2a7c63991a19.png)
 
 
 
