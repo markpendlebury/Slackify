@@ -5,6 +5,10 @@ Slackify is a local client used to query Spotify and get your currently listenin
 Example: 
 ![enter image description here](https://user-images.githubusercontent.com/63231900/194503307-cd64595d-1ab8-40dd-aa0a-b55728512d6a.png)
 
+
+![Build](https://github.com/markpendlebury/Slackify/workflows/Build/badge.svg)
+![Release](https://github.com/markpendlebury/Slackify/workflows/Release/badge.svg)
+
     
 # Getting Started:
 In order for slackify to update your Slack status you will need to create an application within the slack space you want to update your status in: 
