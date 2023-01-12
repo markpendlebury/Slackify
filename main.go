@@ -8,9 +8,14 @@ import (
 )
 
 func main() {
-	listenUrl := CreateListener()
 
-	openbrowser(listenUrl)
+	slackListenUrl := CreateSlackListener()
+
+	openbrowser(slackListenUrl, "Slack")
+
+	// spotifyListenUrl := CreateSpotifyListener()
+
+	// openbrowser(spotifyListenUrl, "Spotify")
 
 	// Await auth completion
 	client := <-ch
@@ -35,22 +40,22 @@ func main() {
 
 		if currentlyPlaying != nil {
 			if currentlyPlaying.Item != nil {
-				// Create a formatted status update
-				status := fmt.Sprintf("Currently Listening to: %s - %s", currentlyPlaying.Item.Artists[0].Name, currentlyPlaying.Item.Name)
+				// // Create a formatted status update
+				// status := fmt.Sprintf("Currently Listening to: %s - %s", currentlyPlaying.Item.Artists[0].Name, currentlyPlaying.Item.Name)
 
-				// Get the progress (current timestamp) of the track we're listening to:
-				// progress := currentlyPlaying.Progress
-				// Get the full length of the track we're listening to:
-				length := currentlyPlaying.Item.Duration
+				// // Get the progress (current timestamp) of the track we're listening to:
+				// // progress := currentlyPlaying.Progress
+				// // Get the full length of the track we're listening to:
+				// length := currentlyPlaying.Item.Duration
 
-				// Get the time remaining of the track in miliseconds
-				delay := length + 3
+				// // Get the time remaining of the track in miliseconds
+				// delay := length + 3
 
-				// Output to terminal our current status, here \r ensures only use a single line
-				// fmt.Printf("\r " + status)
+				// // Output to terminal our current status, here \r ensures only use a single line
+				// // fmt.Printf("\r " + status)
 
-				// Send our status to slack:
-				setSlackStatus(status, delay)
+				// // Send our status to slack:
+				// setSlackStatus(status, delay)
 			} else {
 				// We're not listening to anything, Tell the user;
 				fmt.Printf("\r Nothing playing...")
