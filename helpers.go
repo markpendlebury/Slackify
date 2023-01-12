@@ -17,9 +17,6 @@ const spotifyRedirectURI = "http://localhost:8080/spotify/callback"
 
 const slackClientId = "4089515761430.4096027862115"
 
-const cert = "/home/mpendlebury/Documents/repos/Elesoft/Slackify/Slackify-CLI/localhost.crt"
-const key = "/home/mpendlebury/Documents/repos/Elesoft/Slackify/Slackify-CLI/localhost.key"
-
 var (
 	spotifyAuth = spotifyauth.New(
 		spotifyauth.WithRedirectURL(spotifyRedirectURI),
@@ -60,7 +57,7 @@ func CreateSlackListener() string {
 		log.Println("Got request for:", r.URL.String())
 	})
 	go func() {
-		err := http.ListenAndServeTLS(":8181", cert, key, nil)
+		err := http.ListenAndServe(":8181", nil)
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -1,76 +1,71 @@
 package main
 
-import (
-	"context"
-	"fmt"
-	"log"
-	"time"
-)
-
 func main() {
 
-	slackListenUrl := CreateSlackListener()
+	startWebserver()
 
-	openbrowser(slackListenUrl, "Slack")
+	// slackListenUrl := CreateSlackListener()
 
-	// spotifyListenUrl := CreateSpotifyListener()
+	// openbrowser(slackListenUrl, "Slack")
 
-	// openbrowser(spotifyListenUrl, "Spotify")
+	// // spotifyListenUrl := CreateSpotifyListener()
 
-	// Await auth completion
-	client := <-ch
+	// // openbrowser(spotifyListenUrl, "Spotify")
 
-	// Get the current logged in user
-	user, err := client.CurrentUser(context.Background())
-	if err != nil {
-		log.Fatal(err)
-	}
+	// // Await auth completion
+	// client := <-ch
 
-	// Show who we're logged in as:
-	fmt.Println("Logged in as: ", user.DisplayName)
+	// // Get the current logged in user
+	// user, err := client.CurrentUser(context.Background())
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	// Begin listening for track changes:
+	// // Show who we're logged in as:
+	// fmt.Println("Logged in as: ", user.DisplayName)
 
-	for {
-		// initialie sleep in miliseconds
-		var sleep int = 300000
+	// // Begin listening for track changes:
 
-		// Get currentlyPlaying data from spotify:
-		currentlyPlaying := GetCurrentlyPlaying(client)
+	// for {
+	// 	// initialie sleep in miliseconds
+	// 	var sleep int = 300000
 
-		if currentlyPlaying != nil {
-			if currentlyPlaying.Item != nil {
-				// // Create a formatted status update
-				// status := fmt.Sprintf("Currently Listening to: %s - %s", currentlyPlaying.Item.Artists[0].Name, currentlyPlaying.Item.Name)
+	// 	// Get currentlyPlaying data from spotify:
+	// 	currentlyPlaying := GetCurrentlyPlaying(client)
 
-				// // Get the progress (current timestamp) of the track we're listening to:
-				// // progress := currentlyPlaying.Progress
-				// // Get the full length of the track we're listening to:
-				// length := currentlyPlaying.Item.Duration
+	// 	if currentlyPlaying != nil {
+	// 		if currentlyPlaying.Item != nil {
+	// 			// // Create a formatted status update
+	// 			// status := fmt.Sprintf("Currently Listening to: %s - %s", currentlyPlaying.Item.Artists[0].Name, currentlyPlaying.Item.Name)
 
-				// // Get the time remaining of the track in miliseconds
-				// delay := length + 3
+	// 			// // Get the progress (current timestamp) of the track we're listening to:
+	// 			// // progress := currentlyPlaying.Progress
+	// 			// // Get the full length of the track we're listening to:
+	// 			// length := currentlyPlaying.Item.Duration
 
-				// // Output to terminal our current status, here \r ensures only use a single line
-				// // fmt.Printf("\r " + status)
+	// 			// // Get the time remaining of the track in miliseconds
+	// 			// delay := length + 3
 
-				// // Send our status to slack:
-				// setSlackStatus(status, delay)
-			} else {
-				// We're not listening to anything, Tell the user;
-				fmt.Printf("\r Nothing playing...")
-			}
-		}
+	// 			// // Output to terminal our current status, here \r ensures only use a single line
+	// 			// // fmt.Printf("\r " + status)
 
-		// Here we sleep for the above calculated delay plus 2 seconds
-		// This helps reduce the chances of hitting spotify's rate limits
-		// whilst at the same time keeping the slack updates as accurage
-		// as possible, open to ideas for a better solution to this:
+	// 			// // Send our status to slack:
+	// 			// setSlackStatus(status, delay)
+	// 		} else {
+	// 			// We're not listening to anything, Tell the user;
+	// 			fmt.Printf("\r Nothing playing...")
+	// 		}
+	// 	}
 
-		// now := time.Now()
-		// output := fmt.Sprintf("[%s] - Sleeping for: %d", now.Format("15:04:05"), sleep)
-		// fmt.Println(output)
-		time.Sleep(time.Duration(sleep) * time.Millisecond)
-		// time.Sleep(time.Duration(delay)*time.Millisecond + time.Duration(2))
-	}
+	// 	// Here we sleep for the above calculated delay plus 2 seconds
+	// 	// This helps reduce the chances of hitting spotify's rate limits
+	// 	// whilst at the same time keeping the slack updates as accurage
+	// 	// as possible, open to ideas for a better solution to this:
+
+	// 	// now := time.Now()
+	// 	// output := fmt.Sprintf("[%s] - Sleeping for: %d", now.Format("15:04:05"), sleep)
+	// 	// fmt.Println(output)
+	// 	time.Sleep(time.Duration(sleep) * time.Millisecond)
+	// 	// time.Sleep(time.Duration(delay)*time.Millisecond + time.Duration(2))
+	// }
 }
