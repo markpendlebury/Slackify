@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-const port = 8080
+const port = 1234
 
 func startWebserver() {
 	fileServer := http.FileServer(http.Dir("./html"))
