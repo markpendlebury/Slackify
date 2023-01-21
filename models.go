@@ -37,3 +37,18 @@ type SlackResponse struct {
 		StatusEmoji string `json:"status_emoji"`
 	} `json:"profile"`
 }
+
+type SlackOpenIdAuthResponse struct {
+	Ok          bool   `json:"ok"`
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+	IDToken     string `json:"id_token"`
+}
+
+type SpotifyOpenIdAuthResponse struct {
+	AccessToken  string `json:"access_token"`
+	TokenType    string `json:"token_type"`
+	Scope        string `json:"scope"`
+	ExpiresIn    int    `json:"expires_in"`
+	RefreshToken string `json:"refresh_token"`
+}
