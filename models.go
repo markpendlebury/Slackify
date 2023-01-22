@@ -52,3 +52,13 @@ type SpotifyOpenIdAuthResponse struct {
 	ExpiresIn    int    `json:"expires_in"`
 	RefreshToken string `json:"refresh_token"`
 }
+
+type HtmlContext struct {
+	ApplicationName    string
+	SlackClientId      string
+	SpotifyClientId    string
+	SlackRedirectUri   string
+	SpotifyRedirectUri string
+	SpotifyState       string
+	SlackState         string
+}
