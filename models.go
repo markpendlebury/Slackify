@@ -62,3 +62,10 @@ type HtmlContext struct {
 	SpotifyState       string
 	SlackState         string
 }
+
+type UserModel struct {
+	Id           string
+	Username     string
+	SlackToken   string
+	SpotifyToken string
+}
