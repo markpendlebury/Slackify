@@ -1,6 +1,6 @@
 # Welcome
 
-Slackify is a local client used to query Spotify and get your currently listening to track and update your status within Slack.
+Slackify is a collection of web and backend microsservices (overengineerd yet i know) used to query Spotify and get your currently listening to track and update your status within Slack.
 
 This repository is the webserver side of the application, the rest is still in development and will be available soon
 
@@ -14,8 +14,6 @@ Example: <br>
 
 
 ![Build](https://github.com/markpendlebury/Slackify/workflows/Build/badge.svg) ![Release](https://github.com/markpendlebury/Slackify/workflows/Release/badge.svg)
-
-
 
 
     
