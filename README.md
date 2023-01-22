@@ -4,17 +4,55 @@ Slackify is a collection of web and backend microsservices (overengineerd yet i 
 
 This repository is the webserver side of the application, the rest is still in development and will be available soon
 
-Example: <br>
-![enter image description here](https://user-images.githubusercontent.com/63231900/211337042-b812ded7-9a24-4d28-b4b9-2a7c63991a19.png)
-
-
-
+Example: 
 <br>
+<p align="center">
+<!-- ![Slack profile preview](https://user-images.githubusercontent.com/63231900/211337042-b812ded7-9a24-4d28-b4b9-2a7c63991a19.png) -->
+<img src="https://user-images.githubusercontent.com/63231900/211337042-b812ded7-9a24-4d28-b4b9-2a7c63991a19.png">
+</p>
+<p align="center">
+<img src="https://user-images.githubusercontent.com/63231900/213915058-24630098-eabb-461a-8b7e-fa5b57c8c994.png">
+</p>
 <br>
 
+<p align="center">
+  <img src="https://github.com/markpendlebury/Slackify/workflows/Build/badge.svg">
+  <img src="https://github.com/markpendlebury/Slackify/workflows/Release/badge.svg">
+</p>
 
-![Build](https://github.com/markpendlebury/Slackify/workflows/Build/badge.svg) ![Release](https://github.com/markpendlebury/Slackify/workflows/Release/badge.svg)
 
+# Getting started
+
+Before you start you will need to set the following environment variables: 
+
+```
+SLACK_CLIENT_ID="YOUR_SLACK_APP_CLIENT_ID_HERE",
+SPOTIFY_CLIENT_ID="YOUR_SPOTIFY_APP_CLIENT_ID_HERE",
+SLACK_REDIRECT_URI="https://localhost:8080/slack/callback",
+SPOTIFY_REDIRECT_URI="http://localhost:8181/spotify/callback",
+BASE64_ENCODED_SPOTIFY_CREDENTIALS="YOUR_SPOTIFY_CLIENT_ID_AND_SECRET_TOGETHER_SEPERATED_BY_A_:_BASED64_ENCODED"
+SLACK_CLIENT_SECRET="YOUR_SLACK_APP_CLIENT_SECRET"
+```
+
+When the web application starts it will actually start 3 webservers, 1 listens on port `1234` and is serving the actual html page. 2 listens on port 8080 and is waiting for callback response from spotify's auth flow and the 3rd listens on port 8181 and waits for a callback from slacks auth flow.
+
+
+### Docker
+
+```
+git clone git@github.com:markpendlebury/Slackify.git slackify-ui
+cd slackify-ui
+docker build -t slackify-ui:latest .
+docker run -p 1234:1234 -p 8080:8080 -p 8181 slacikfy-ui:latest
+```
+
+## Compiled from source
+```
+git clone git@github.com:markpendlebury/Slackify.git slackify-ui
+cd slackify-ui
+go build .
+./slackify
+```
 
     
 # Changelog:
