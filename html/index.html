@@ -37,7 +37,7 @@
                 <div>
                     <h2>Step two</h2>
                     <a target="_blank"
-                        href="https://accounts.spotify.com/authorize?response_type=code&client_id={{ .SpotifyClientId }}&scope=user-read-currently-playing&redirect_uri={{ .SpotifyClientId }}&state={{ ,SpotifyState }}"
+                        href="https://accounts.spotify.com/authorize?response_type=code&client_id={{ .SpotifyClientId }}&scope=user-read-currently-playing&redirect_uri={{ .SlackRedirectUri }}&state={{ .SpotifyState }}"
                         style="text-decoration:none;">
                         <button class="btn-spotify">
                             <i class="fa fa-spotify" style="font-size:35px; padding-right: 15px"></i> 
