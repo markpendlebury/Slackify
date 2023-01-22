@@ -32,9 +32,18 @@ SLACK_REDIRECT_URI="https://localhost:8080/slack/callback",
 SPOTIFY_REDIRECT_URI="http://localhost:8181/spotify/callback",
 BASE64_ENCODED_SPOTIFY_CREDENTIALS="YOUR_SPOTIFY_CLIENT_ID_AND_SECRET_TOGETHER_SEPERATED_BY_A_:_BASED64_ENCODED"
 SLACK_CLIENT_SECRET="YOUR_SLACK_APP_CLIENT_SECRET"
+AWS_ACCESS_KEY_ID="YOUR_AWS_ACCESS_KEY_ID"
+AWS_SECRET_ACCESS_KEY="YOUR_AWS_SECRET_ACCESS_KEY"
+AWS_REGION="THE_REGION_OF_YOUR_DYNAMO_DB"
 ```
 
-When the web application starts it will actually start 3 webservers, 1 listens on port `1234` and is serving the actual html page. 2 listens on port 8080 and is waiting for callback response from spotify's auth flow and the 3rd listens on port 8181 and waits for a callback from slacks auth flow.
+You will also need an aws account and a user configured with cli access (access key / secret etc) and access to a dynamodb instance in your preferred region.
+
+
+When the web application starts it will actually start 3 webservers: 
+- The main webserver listening on `1234` 
+- The Spotify callback handler listening on port `8080`
+- The Slack callback handler listening on port `8181`
 
 
 ### Docker
