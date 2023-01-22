@@ -4,14 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 )
 
 const slackProfileEndpoint = "https://slack.com/api/users.profile.set"
 
-func setSlackStatus(status string, delay int) {
+func setSlackStatus(status string, delay int, userToken string) {
 
 	now := time.Now()
 	output := fmt.Sprintf("[%s] Settings Slack status to: %s", now.Format("15:04:05"), status)
@@ -49,7 +48,7 @@ func setSlackStatus(status string, delay int) {
 	}
 
 	// create our authToken
-	authToken := fmt.Sprintf("Bearer %s", os.Getenv("SLACK_TOKEN"))
+	authToken := fmt.Sprintf("Bearer %s", userToken)
 
 	// Add our required request headers
 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
@@ -87,7 +86,7 @@ func setSlackStatus(status string, delay int) {
 		fmt.Println(err)
 	}
 
-	// This needs improvement, currently just swalling the response
+	// This needs improvement, currently just swallowing the response
 	// We should read the response and handle any errors here:
 	// fmt.Sprintf("%s", body)
 
