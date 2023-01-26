@@ -2,12 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
-	"time"
 )
 
 const slackProfileEndpoint = "https://slack.com/api/users.profile.set"
@@ -35,7 +32,6 @@ func GetSlackUserId(authToken string) SlackUserModel {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(body))
 
 	slackUser := SlackUserModel{}
 
@@ -47,101 +43,103 @@ func GetSlackUserId(authToken string) SlackUserModel {
 	return SlackUserModel{}
 }
 
-func SetSlackStatus(status string, delay int, userToken string) {
+// This will be moved out of here into it's own service
 
-	now := time.Now()
-	output := fmt.Sprintf("[%s] Settings Slack status to: %s", now.Format("15:04:05"), status)
+// func SetSlackStatus(status string, delay int, userToken string) {
 
-	fmt.Println(output)
-	// Get an expiry time in unix time format
-	expiry := GetExpiryTime(delay)
+// 	now := time.Now()
+// 	output := fmt.Sprintf("[%s] Settings Slack status to: %s", now.Format("15:04:05"), status)
 
-	// Set our request method
-	method := "POST"
+// 	fmt.Println(output)
+// 	// Get an expiry time in unix time format
+// 	expiry := GetExpiryTime(delay)
 
-	// Create our payload
-	payloadString := fmt.Sprintf(`
-  {
-	  "profile": {
-		  "status_text": "%s",
-		  "status_emoji": ":notes:",
-		  "status_expiration": "%d"
-	  }
-  }
-  `, status, expiry)
+// 	// Set our request method
+// 	method := "POST"
 
-	// Create a reader for our payloads
-	payload := strings.NewReader(payloadString)
+// 	// Create our payload
+// 	payloadString := fmt.Sprintf(`
+//   {
+// 	  "profile": {
+// 		  "status_text": "%s",
+// 		  "status_emoji": ":notes:",
+// 		  "status_expiration": "%d"
+// 	  }
+//   }
+//   `, status, expiry)
 
-	// Create a httpclient
-	client := &http.Client{}
+// 	// Create a reader for our payloads
+// 	payload := strings.NewReader(payloadString)
 
-	// Create a http request
-	req, err := http.NewRequest(method, slackProfileEndpoint, payload)
+// 	// Create a httpclient
+// 	client := &http.Client{}
 
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+// 	// Create a http request
+// 	req, err := http.NewRequest(method, slackProfileEndpoint, payload)
 
-	// create our authToken
-	authToken := fmt.Sprintf("Bearer %s", userToken)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return
+// 	}
 
-	// Add our required request headers
-	req.Header.Add("Content-Type", "application/json; charset=utf-8")
-	req.Header.Add("Authorization", authToken)
+// 	// create our authToken
+// 	authToken := fmt.Sprintf("Bearer %s", userToken)
 
-	// use our client to submit the request
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer res.Body.Close()
+// 	// Add our required request headers
+// 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
+// 	req.Header.Add("Authorization", authToken)
 
-	// Read the response body:
-	// body, err := ioutil.ReadAll(res.Body)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
+// 	// use our client to submit the request
+// 	res, err := client.Do(req)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return
+// 	}
+// 	defer res.Body.Close()
 
-	var sr SlackResponse
+// 	// Read the response body:
+// 	// body, err := ioutil.ReadAll(res.Body)
+// 	// if err != nil {
+// 	// 	fmt.Println(err)
+// 	// 	return
+// 	// }
 
-	derp := json.NewDecoder(res.Body).Decode(&sr)
+// 	var sr SlackResponse
 
-	if !sr.Ok {
-		fmt.Println("Error updating slack status: ")
+// 	derp := json.NewDecoder(res.Body).Decode(&sr)
 
-		if sr.Error == "ratelimited" {
-			time.Sleep(30000)
-		}
-		fmt.Println(sr.Error)
-	}
+// 	if !sr.Ok {
+// 		fmt.Println("Error updating slack status: ")
 
-	if derp != nil {
-		fmt.Println(err)
-	}
+// 		if sr.Error == "ratelimited" {
+// 			time.Sleep(30000)
+// 		}
+// 		fmt.Println(sr.Error)
+// 	}
 
-	// This needs improvement, currently just swallowing the response
-	// We should read the response and handle any errors here:
-	// fmt.Sprintf("%s", body)
+// 	if derp != nil {
+// 		fmt.Println(err)
+// 	}
 
-}
+// 	// This needs improvement, currently just swallowing the response
+// 	// We should read the response and handle any errors here:
+// 	// fmt.Sprintf("%s", body)
 
-func GetExpiryTime(delay int) int64 {
-	// Get epoc time in 5 mins for status expiry:
-	now := time.Now()
+// }
 
-	// Convert delay (miliseconds stored in an integer)
-	// to time.Duration so we can then convert it to
-	// unix time
-	delayTime := time.Duration(delay)
+// func GetExpiryTime(delay int) int64 {
+// 	// Get epoc time in 5 mins for status expiry:
+// 	now := time.Now()
 
-	// Take now (current time in unix time) and add
-	// our delaytime (current track time - track length) in miliseconds
-	// to get an expiry time in unix time for our slack status
-	expiry := now.Add(delayTime * time.Millisecond)
+// 	// Convert delay (miliseconds stored in an integer)
+// 	// to time.Duration so we can then convert it to
+// 	// unix time
+// 	delayTime := time.Duration(delay)
 
-	return expiry.Unix()
-}
+// 	// Take now (current time in unix time) and add
+// 	// our delaytime (current track time - track length) in miliseconds
+// 	// to get an expiry time in unix time for our slack status
+// 	expiry := now.Add(delayTime * time.Millisecond)
+
+// 	return expiry.Unix()
+// }

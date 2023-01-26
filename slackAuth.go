@@ -51,7 +51,6 @@ func completeSlackAuth(w http.ResponseWriter, r *http.Request) {
 
 	// Now exchange the slackAuthToken for a slackAccessToken:
 	slackResponse := exchangeSlackAuthToken(slackAuthToken)
-	fmt.Println(slackResponse)
 
 	// Now get the userId of this user:
 	slackUser := GetSlackUserId(slackResponse.AccessToken)
@@ -104,7 +103,6 @@ func exchangeSlackAuthToken(slackAuthToken string) SlackOpenIdAuthResponse {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(body))
 
 	var slackResponse SlackOpenIdAuthResponse
 

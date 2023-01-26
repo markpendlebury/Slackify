@@ -34,8 +34,6 @@ func homePage(writer http.ResponseWriter, request *http.Request) {
 		//Check for formvalues:
 		slackUserId := request.FormValue("slackUserId")
 		slackTeamId := request.FormValue("slackTeamId")
-		fmt.Println(slackUserId)
-		fmt.Println(slackTeamId)
 
 		// Read our html file (index.html) into memory
 		tmplt, _ := template.ParseFiles("./html/index.html")

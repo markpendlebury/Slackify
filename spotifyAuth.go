@@ -54,8 +54,6 @@ func completeSpotifyAuth(w http.ResponseWriter, r *http.Request) {
 	slackUserId := stateCodeParts[0]
 	slackTeamId := stateCodeParts[1]
 
-	fmt.Println(slackUserId)
-
 	// TODO: Validate state code here
 
 	// ------------------------------
@@ -79,11 +77,10 @@ func completeSpotifyAuth(w http.ResponseWriter, r *http.Request) {
 		newUser.SlackToken = existingUser.SlackToken
 		UpdateUser(newUser)
 	} else {
-		// newUser.SpotifyToken = existingUser.SpotifyToken
-		// newUser.SpotifyUserId = existingUser.SpotifyUserId
-		// UpdateUser(newUser)
+		// TODO: if we're here we don't have any slack information
+		// Throw the users out and inform they needs to auth
+		// with slack first
 	}
-	fmt.Println(spotifyResponse.AccessToken)
 
 	// Lets create some hacky js to close the window:
 	js := fmt.Sprintf(`<script type="text/javascript"  charset="utf-8">
