@@ -64,11 +64,14 @@ type HtmlContext struct {
 }
 
 type UserModel struct {
-	SlackTeamId   string
-	SlackUserId   string
-	SpotifyUserId string
-	SlackToken    string
-	SpotifyToken  string
+	SlackTeamId              string
+	SlackUserId              string
+	SpotifyUserId            string
+	SlackToken               string
+	SpotifyToken             string
+	UserName                 string
+	UserProfilePicture       string
+	UserCurrentlyListeningTo string
 }
 
 type SlackUserModel struct {
