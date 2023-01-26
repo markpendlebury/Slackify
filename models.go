@@ -54,13 +54,19 @@ type SpotifyOpenIdAuthResponse struct {
 }
 
 type HtmlContext struct {
-	ApplicationName    string
-	SlackClientId      string
-	SpotifyClientId    string
-	SlackRedirectUri   string
-	SpotifyRedirectUri string
-	SpotifyState       string
-	SlackState         string
+	ApplicationName      string
+	SlackClientId        string
+	SpotifyClientId      string
+	SlackRedirectUri     string
+	SpotifyRedirectUri   string
+	SpotifyState         string
+	SlackState           string
+	SlackUserExists      bool
+	SpotifyUserExists    bool
+	UserExists           bool
+	UserName             string
+	ProfilePicture       string
+	CurrentlyListeningTo string
 }
 
 type UserModel struct {
