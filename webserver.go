@@ -30,10 +30,42 @@ func startWebserver() {
 func homePage(writer http.ResponseWriter, request *http.Request) {
 	// Only accept GET on this route
 	if request.Method == "GET" {
+		slackUserExists := false
+		spotifyUserExists := false
+		userExists := false
+		userName := ""
+		// profilePicture := ""
+		currentlyListeningTo := "Nothing"
 
 		//Check for formvalues:
 		slackUserId := request.FormValue("slackUserId")
 		slackTeamId := request.FormValue("slackTeamId")
+
+		if len(slackUserId) > 0 && len(slackTeamId) > 0 {
+			tempUser := UserModel{
+				SlackUserId: slackUserId,
+				SlackTeamId: slackTeamId,
+			}
+			user := GetUserBySlackUserId(tempUser)
+
+			if len(user.SlackUserId) > 0 && len(user.SlackTeamId) > 0 {
+				slackUserExists = true
+			}
+
+			if len(user.SpotifyUserId) > 0 {
+				spotifyUserExists = true
+				if len(user.UserCurrentlyListeningTo) > 0 {
+					currentlyListeningTo = user.UserCurrentlyListeningTo
+				}
+			}
+
+			if spotifyUserExists && slackUserExists {
+				userExists = true
+			}
+
+			userName = user.UserName
+			// profilePicture = user.UserProfilePicture
+		}
 
 		// Read our html file (index.html) into memory
 		tmplt, _ := template.ParseFiles("./html/index.html")
@@ -51,6 +83,12 @@ func homePage(writer http.ResponseWriter, request *http.Request) {
 			SpotifyRedirectUri: os.Getenv("SPOTIFY_REDIRECT_URI"),
 			SlackState:         "TODO, GENERATE SLACK STATE",
 			SpotifyState:       fmt.Sprintf("%s:%s", slackUserId, slackTeamId),
+			SlackUserExists:    slackUserExists,
+			SpotifyUserExists:  spotifyUserExists,
+			UserExists:         userExists,
+			UserName:           userName,
+			// ProfilePicture:     profilePicture,
+			CurrentlyListeningTo: currentlyListeningTo,
 		}
 
 		// Build the template and write it to the http response

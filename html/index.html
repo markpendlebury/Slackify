@@ -1,8 +1,146 @@
 <!DOCTYPE html>
 <html>
 
+<style>
+    @import 'https://fonts.googleapis.com/css?family=Open+Sans';
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap');
+
+
+* {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.75em;
+    font-size: 16px;
+    background-color: #222;
+    color: #aaa;
+}
+
+.simple-container {
+    max-width: 675px;
+    margin: 0 auto;
+    padding-top: 70px;
+    padding-bottom: 20px;
+}
+
+.simple-print {
+    fill: white;
+    stroke: white;
+}
+
+.simple-print svg {
+    height: 100%;
+}
+
+.simple-close {
+    color: white;
+    border-color: white;
+}
+
+.simple-ext-info {
+    border-top: 1px solid #aaa;
+}
+
+p {
+    font-size: 16px;
+}
+
+h1 {
+    font-size: 60px;
+    line-height: 34px;
+}
+
+h2 {
+    font-size: 32px;
+    line-height: 25px;
+}
+
+h3 {
+    font-size: 15px;
+    line-height: 27px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #D8D8D8;
+    border-top: 1px solid #D8D8D8;
+}
+
+hr {
+    height: 1px;
+    background-color: #d8d8d8;
+    border: none;
+    width: 100%;
+    margin: 0px;
+}
+
+a[href] {
+    color: #1e8ad6;
+}
+
+a[href]:hover {
+    color: #3ba0e6;
+}
+
+img {
+    max-width: 100%;
+}
+
+li {
+    line-height: 1.5em;
+}
+
+aside,
+[class *="sidebar"],
+[id *="sidebar"] {
+    max-width: 90%;
+    margin: 0 auto;
+    border: 1px solid lightgrey;
+    padding: 5px 15px;
+}
+
+@media (min-width: 1921px) {
+    body {
+        font-size: 18px;
+    }
+}
+
+.btn-spotify {
+    display: flex;
+    align-items: center;
+    font-family: "Arial";
+    font-size: 20px;
+    background-color: #1DB954;
+    color: #191414;
+    align-content: center;
+    padding: 10px;
+    border: 0;
+    border-radius: 100px;
+}
+
+.btn-slack {
+    align-items: center;
+    color: #fff;
+    background-color: #4A154B;
+    border: 0;
+    border-radius: 4px;
+    display: inline-flex;
+    font-family: Lato, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    height: 48px;
+    justify-content: center;
+    text-decoration: none;
+    width: 200px
+}
+
+.button-frame {
+    display: inline-block;
+}
+</style>
+
 <head>
-    <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
@@ -11,11 +149,22 @@
         <container>
             <div class="simple-container">
                 <h1>{{ .ApplicationName }}</h1>
+
+                {{ if .UserExists }}
+                <p>
+                    <h2>Welcome {{ .UserName }} </h2>
+                </p>
+                <p>
+                    <h3>You're currently listening to: {{ .CurrentlyListeningTo }}</h3>
+                </p>
+                {{ else }}
                 <h3>Update your Slack profile status with the track you're currently listening to on Spotify</h3>
                 <h4>Simply follow these three steps to get started </h4>
 
+
                 <div>
                     <h2>Step one</h2>
+                    {{ if not .SlackUserExists }}
                     <a href="https://slack.com//openid/connect/authorize?response_type=code&scope=openid%20profile%20email&client_id={{ .SlackClientId }}&redirect_uri={{ .SlackRedirectUri }}"
                         style="align-items:center;color:#fff;background-color:#4A154B;border:0;border-radius:48px;display:inline-flex;font-family:Lato, sans-serif;font-size:16px;font-weight:600;height:48px;justify-content:center;text-decoration:none;width:256px"><svg
                             xmlns="http://www.w3.org/2000/svg" style="height:20px;width:20px;margin-right:12px"
@@ -33,25 +182,39 @@
                                 d="M77.6 97c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9-12.9-5.8-12.9-12.9V97h12.9zm0-6.5c-7.1 0-12.9-5.8-12.9-12.9s5.8-12.9 12.9-12.9h32.3c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H77.6z"
                                 fill="#ecb22e"></path>
                         </svg>Sign in with Slack</a>
+                    {{ else }}
+                    <h1>Done!</h1>
+                    {{ end }}
                 </div>
                 <div>
                     <h2>Step two</h2>
+                    {{ if not .SpotifyUserExists }}
                     <a target="_blank"
                         href="https://accounts.spotify.com/authorize?response_type=code&client_id={{ .SpotifyClientId }}&scope=user-read-currently-playing&redirect_uri={{ .SpotifyRedirectUri }}&state={{ .SpotifyState }}"
                         style="text-decoration:none;">
                         <button class="btn-spotify">
-                            <i class="fa fa-spotify" style="font-size:35px; padding-right: 15px"></i> 
+                            <i class="fa fa-spotify" style="font-size:35px; padding-right: 15px"></i>
                             Sign in with Spotify
-                            </button>
-                        </a>
+                        </button>
+                    </a>
+                    {{ else }}
+                    <h1>Done!</h1>
+                    {{ end }}
                 </div>
                 <div>
                     <h2>Step three</h2>
                     <p>Start listening!</p>
                 </div>
+                {{ end }}
+
+
+
             </div>
         </container>
 
     </center>
+
+
 </body>
+
 </html>

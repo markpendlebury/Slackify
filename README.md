@@ -65,6 +65,12 @@ go build .
 
     
 # Changelog:
+- v0.5-alpha
+  - Exanding on the user model to contain more personalised information such as username / currently listening to
+  - Added mechanisms and updated auth flow to grab required data during the user auth flow process
+  - Updated index.html to contain logic to only show parts of the auth flow that are required (when data is missing for example) 
+  - Mapping (some of) this data to data pulled from slack / spotify
+  
 - v0.4-alpha
   - Implementing DynamoDB functionality
   - Created a UserModel to store in the db
