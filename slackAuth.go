@@ -26,8 +26,7 @@ func CreateSlackListener() {
 		log.Println("Got request for:", r.URL.String())
 	})
 	go func() {
-		err := http.ListenAndServeTLS(":8181", "localhost.crt", "localhost.key", nil)
-		// err := http.ListenAndServe(":8181", nil)
+		err := http.ListenAndServe(":8181", nil)
 		if err != nil {
 			log.Fatal(err)
 		}
