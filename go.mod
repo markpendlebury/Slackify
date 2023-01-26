@@ -7,7 +7,10 @@ require (
 	github.com/zmb3/spotify/v2 v2.3.0
 )
 
+require github.com/aws/smithy-go v1.13.5 // indirect
+
 require (
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.18.1
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
