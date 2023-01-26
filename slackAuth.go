@@ -55,9 +55,11 @@ func completeSlackAuth(w http.ResponseWriter, r *http.Request) {
 	slackUser := GetSlackUserId(slackResponse.AccessToken)
 
 	newUser := UserModel{
-		SlackUserId: slackUser.HTTPSSlackComUserID,
-		SlackTeamId: slackUser.HTTPSSlackComTeamID,
-		SlackToken:  slackResponse.AccessToken,
+		SlackUserId:        slackUser.HTTPSSlackComUserID,
+		SlackTeamId:        slackUser.HTTPSSlackComTeamID,
+		SlackToken:         slackResponse.AccessToken,
+		UserName:           fmt.Sprintf("%s %s", slackUser.GivenName, slackUser.FamilyName),
+		UserProfilePicture: slackUser.Picture,
 	}
 
 	// Lets check if we already have a user with this SlackId:
@@ -67,6 +69,7 @@ func completeSlackAuth(w http.ResponseWriter, r *http.Request) {
 	} else {
 		newUser.SpotifyToken = existingUser.SpotifyToken
 		newUser.SpotifyUserId = existingUser.SpotifyUserId
+		newUser.UserName = fmt.Sprintf("%s %s", slackUser.GivenName, slackUser.FamilyName)
 		// UpdateUser(newUser)
 	}
 

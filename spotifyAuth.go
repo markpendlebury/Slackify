@@ -75,10 +75,12 @@ func completeSpotifyAuth(w http.ResponseWriter, r *http.Request) {
 	if len(existingUser.SpotifyToken) == 0 || len(existingUser.SpotifyUserId) == 0 {
 		newUser.SpotifyToken = spotifyResponse.AccessToken
 		newUser.SlackToken = existingUser.SlackToken
+		newUser.UserName = existingUser.UserName
+		newUser.UserProfilePicture = existingUser.UserProfilePicture
 		UpdateUser(newUser)
 	} else {
 		// TODO: if we're here we don't have any slack information
-		// Throw the users out and inform they needs to auth
+		// Throw the users out and inform they need to auth
 		// with slack first
 	}
 
