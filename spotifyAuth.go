@@ -31,7 +31,6 @@ func CreateSpotifyListener() {
 			log.Fatal(err)
 		}
 	}()
-
 }
 
 // This function will use the response from the callback to
@@ -40,6 +39,7 @@ func completeSpotifyAuth(w http.ResponseWriter, r *http.Request) {
 	// Lets try to get the token from the response:
 	spotifyAuthToken := r.FormValue("code")
 	spotifyStateCode := r.FormValue("state")
+	stateCode := r.FormValue("state")
 
 	if len(spotifyAuthToken) == 0 {
 		log.Fatal("Returned authToken was empty")
@@ -49,24 +49,51 @@ func completeSpotifyAuth(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Returned state was empty")
 	}
 
+	stateCodeParts := strings.Split(stateCode, ":")
+
+	slackUserId := stateCodeParts[0]
+	slackTeamId := stateCodeParts[1]
+
+	fmt.Println(slackUserId)
+
 	// TODO: Validate state code here
 
 	// ------------------------------
 
 	// Now we exchange our authToken for an spotifyResponse:
-	spotifyResponse := exchangeSpotifyAuthToken(spotifyAuthToken)
+	spotifyResponse := ExchangeSpotifyAuthToken(spotifyAuthToken)
 
+	spotifyUserModel := GetSpotifyUser(spotifyResponse.AccessToken)
+
+	newUser := UserModel{
+		SlackUserId:   slackUserId,
+		SlackTeamId:   slackTeamId,
+		SpotifyUserId: spotifyUserModel.ID,
+		SpotifyToken:  spotifyResponse.AccessToken,
+	}
+
+	// Get existing user based on SlackUserId
+	existingUser := GetUserBySlackUserId(newUser)
+	if len(existingUser.SpotifyToken) == 0 || len(existingUser.SpotifyUserId) == 0 {
+		newUser.SpotifyToken = spotifyResponse.AccessToken
+		newUser.SlackToken = existingUser.SlackToken
+		UpdateUser(newUser)
+	} else {
+		// newUser.SpotifyToken = existingUser.SpotifyToken
+		// newUser.SpotifyUserId = existingUser.SpotifyUserId
+		// UpdateUser(newUser)
+	}
 	fmt.Println(spotifyResponse.AccessToken)
 
 	// Lets create some hacky js to close the window:
-	js := `<script type="text/javascript"  charset="utf-8">
-		window.close();
-	</script>`
+	js := fmt.Sprintf(`<script type="text/javascript"  charset="utf-8">
+		window.location.replace("%s/?slackUserId=%s&slackTeamId=%s");
+	</script>`, baseUrl, newUser.SlackUserId, newUser.SlackTeamId)
 	// Send the hacky JS back to the responseWriter
 	w.Write([]byte(js))
 }
 
-func exchangeSpotifyAuthToken(authToken string) SpotifyOpenIdAuthResponse {
+func ExchangeSpotifyAuthToken(authToken string) SpotifyOpenIdAuthResponse {
 	url := "https://accounts.spotify.com/api/token"
 	method := "POST"
 
@@ -91,10 +118,38 @@ func exchangeSpotifyAuthToken(authToken string) SpotifyOpenIdAuthResponse {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(body))
-
 	var responseModel SpotifyOpenIdAuthResponse
 	_ = json.Unmarshal(body, &responseModel)
 
 	return responseModel
+}
+
+func GetSpotifyUser(accessToken string) SpotifyUserModel {
+	url := "https://api.spotify.com/v1/me"
+	method := "GET"
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+
+	res, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var spotifyUser SpotifyUserModel
+
+	_ = json.Unmarshal(body, &spotifyUser)
+
+	return spotifyUser
 }
