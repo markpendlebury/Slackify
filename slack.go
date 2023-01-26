@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -10,7 +12,42 @@ import (
 
 const slackProfileEndpoint = "https://slack.com/api/users.profile.set"
 
-func setSlackStatus(status string, delay int, userToken string) {
+func GetSlackUserId(authToken string) SlackUserModel {
+	url := "https://slack.com/api/openid.connect.userInfo?pretty=1"
+	method := "GET"
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Add("Authorization", "Bearer "+authToken)
+
+	res, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(body))
+
+	slackUser := SlackUserModel{}
+
+	_ = json.Unmarshal(body, &slackUser)
+
+	if slackUser.Ok {
+		return slackUser
+	}
+	return SlackUserModel{}
+}
+
+func SetSlackStatus(status string, delay int, userToken string) {
 
 	now := time.Now()
 	output := fmt.Sprintf("[%s] Settings Slack status to: %s", now.Format("15:04:05"), status)
