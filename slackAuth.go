@@ -14,6 +14,7 @@ import (
 var slackClientId = os.Getenv("SLACK_CLIENT_ID")
 var slackClientSecret = os.Getenv("SLACK_CLIENT_SECRET")
 var slackRedirectUri = os.Getenv("SLACK_REDIRECT_URI")
+var baseUrl = os.Getenv("BASE_URL")
 
 // This Function creates a http server and awaits for a
 // callback response from out request to authenticate
@@ -25,7 +26,6 @@ func CreateSlackListener() {
 		log.Println("Got request for:", r.URL.String())
 	})
 	go func() {
-		// err := http.ListenAndServeTLS(":8181", "localhost.crt", "localhost.key", nil)
 		err := http.ListenAndServe(":8181", nil)
 		if err != nil {
 			log.Fatal(err)
@@ -44,27 +44,38 @@ func completeSlackAuth(w http.ResponseWriter, r *http.Request) {
 		log.Fatal("Returned authToken was empty")
 	}
 
-	// if len(slackStateCode) == 0 {
-	// 	log.Fatal("Returned state was empty")
-	// }
-
 	// TODO: validate state code here
 	//
 	// ------------------------------
 
 	// Now exchange the slackAuthToken for a slackAccessToken:
-
 	slackResponse := exchangeSlackAuthToken(slackAuthToken)
 
-	fmt.Println(slackResponse)
+	// Now get the userId of this user:
+	slackUser := GetSlackUserId(slackResponse.AccessToken)
+
+	newUser := UserModel{
+		SlackUserId: slackUser.HTTPSSlackComUserID,
+		SlackTeamId: slackUser.HTTPSSlackComTeamID,
+		SlackToken:  slackResponse.AccessToken,
+	}
+
+	// Lets check if we already have a user with this SlackId:
+	existingUser := GetUserBySlackUserId(newUser)
+	if len(existingUser.SlackToken) == 0 || len(existingUser.SlackTeamId) == 0 || len(existingUser.SlackUserId) == 0 {
+		CreateUser(newUser)
+	} else {
+		newUser.SpotifyToken = existingUser.SpotifyToken
+		newUser.SpotifyUserId = existingUser.SpotifyUserId
+		// UpdateUser(newUser)
+	}
 
 	// Lets create some hacky js to close the window:
-	js := `<script type="text/javascript"  charset="utf-8">
-		window.location.replace("/");
-	</script>`
+	js := fmt.Sprintf(`<script type="text/javascript"  charset="utf-8">
+		window.location.replace("%s/?slackUserId=%s&slackTeamId=%s");
+	</script>`, baseUrl, newUser.SlackUserId, newUser.SlackTeamId)
 	// Send the hacky JS back to the responseWriter
 	w.Write([]byte(js))
-
 }
 
 func exchangeSlackAuthToken(slackAuthToken string) SlackOpenIdAuthResponse {
@@ -91,7 +102,6 @@ func exchangeSlackAuthToken(slackAuthToken string) SlackOpenIdAuthResponse {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(body))
 
 	var slackResponse SlackOpenIdAuthResponse
 
