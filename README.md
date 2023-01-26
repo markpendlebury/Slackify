@@ -65,6 +65,14 @@ go build .
 
     
 # Changelog:
+- v0.4-alpha
+  - Implementing DynamoDB functionality
+  - Created a UserModel to store in the db
+  - Implemented a (first attempt) flow for requesting and storing the UserModel
+  
+- v0.3.1-alpha
+  - Fixed a small templating issue
+
 - v0.3-alpha
   - Refactored the entire application to now serve over html rather than a console application
   - Adding templating mechanism to help keep secrets out of html (clientid/secrets etc) 
