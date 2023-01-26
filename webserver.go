@@ -30,6 +30,13 @@ func startWebserver() {
 func homePage(writer http.ResponseWriter, request *http.Request) {
 	// Only accept GET on this route
 	if request.Method == "GET" {
+
+		//Check for formvalues:
+		slackUserId := request.FormValue("slackUserId")
+		slackTeamId := request.FormValue("slackTeamId")
+		fmt.Println(slackUserId)
+		fmt.Println(slackTeamId)
+
 		// Read our html file (index.html) into memory
 		tmplt, _ := template.ParseFiles("./html/index.html")
 
@@ -45,7 +52,7 @@ func homePage(writer http.ResponseWriter, request *http.Request) {
 			SlackRedirectUri:   os.Getenv("SLACK_REDIRECT_URI"),
 			SpotifyRedirectUri: os.Getenv("SPOTIFY_REDIRECT_URI"),
 			SlackState:         "TODO, GENERATE SLACK STATE",
-			SpotifyState:       "TODO, GENERATE SPOTIFY STATE",
+			SpotifyState:       fmt.Sprintf("%s:%s", slackUserId, slackTeamId),
 		}
 
 		// Build the template and write it to the http response
