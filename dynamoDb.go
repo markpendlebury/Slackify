@@ -42,21 +42,21 @@ func CreateUserTable() {
 		input := &dynamodb.CreateTableInput{
 			AttributeDefinitions: []*dynamodb.AttributeDefinition{
 				{
-					AttributeName: aws.String("Id"),
+					AttributeName: aws.String("SlackUserId"),
 					AttributeType: aws.String("S"),
 				},
 				{
-					AttributeName: aws.String("Username"),
+					AttributeName: aws.String("SlackTeamId"),
 					AttributeType: aws.String("S"),
 				},
 			},
 			KeySchema: []*dynamodb.KeySchemaElement{
 				{
-					AttributeName: aws.String("Id"),
+					AttributeName: aws.String("SlackUserId"),
 					KeyType:       aws.String("HASH"),
 				},
 				{
-					AttributeName: aws.String("Username"),
+					AttributeName: aws.String("SlackTeamId"),
 					KeyType:       aws.String("RANGE"),
 				},
 			},
@@ -104,12 +104,12 @@ func TableExists(tableName string) bool {
 	}
 }
 
-func PutUser(user UserModel) {
+func CreateUser(user UserModel) {
 	client := DynamodbClient()
 
-	existingUser := GetUser(user)
+	existingUser := GetUserBySlackUserId(user)
 
-	if len(existingUser.Id) > 0 {
+	if len(existingUser.SlackUserId) > 0 {
 		fmt.Println("User already exists")
 		return
 	}
@@ -129,20 +129,20 @@ func PutUser(user UserModel) {
 		log.Fatalf("Got error calling PutItem: %s", err)
 	}
 
-	fmt.Printf("Successfully added new User %s'", user.Username)
+	fmt.Printf("Successfully added new User %s'", user.SlackUserId)
 }
 
-func GetUser(user UserModel) UserModel {
+func GetUserBySlackUserId(user UserModel) UserModel {
 	client := DynamodbClient()
 
 	result, err := client.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(usersTable),
 		Key: map[string]*dynamodb.AttributeValue{
-			"Id": {
-				S: aws.String(user.Id),
+			"SlackTeamId": {
+				S: aws.String(user.SlackTeamId),
 			},
-			"Username": {
-				S: aws.String(user.Username),
+			"SlackUserId": {
+				S: aws.String(user.SlackUserId),
 			},
 		},
 	})
@@ -162,4 +162,40 @@ func GetUser(user UserModel) UserModel {
 		return existingUser
 	}
 	return UserModel{}
+}
+
+// This needs improving, for now i guess we can delete / create to update
+// until i can figureo out how to update multiple fields of a user item in
+// a single transaction
+
+func UpdateUser(user UserModel) {
+	DeletUser(user)
+	CreateUser(user)
+}
+
+func DeletUser(user UserModel) {
+	client := DynamodbClient()
+
+	existingUser := GetUserBySlackUserId(user)
+
+	// Only delete the user if they exist:
+	if len(existingUser.SlackUserId) > 0 {
+		input := &dynamodb.DeleteItemInput{
+			Key: map[string]*dynamodb.AttributeValue{
+				"SlackUserId": {
+					S: aws.String(user.SlackUserId),
+				},
+				"SlackTeamId": {
+					S: aws.String(user.SlackTeamId),
+				},
+			},
+			TableName: aws.String(usersTable),
+		}
+
+		_, err := client.DeleteItem(input)
+		if err != nil {
+			log.Fatalf("Got error calling DeleteItem: %s", err)
+		}
+	}
+
 }
