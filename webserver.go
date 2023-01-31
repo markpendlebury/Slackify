@@ -61,6 +61,7 @@ func homePage(writer http.ResponseWriter, request *http.Request) {
 
 			if spotifyUserExists && slackUserExists {
 				userExists = true
+				currentlyListeningTo = GetCurrentlyListeningTo(user.SpotifyToken)
 			}
 
 			userName = user.UserName
