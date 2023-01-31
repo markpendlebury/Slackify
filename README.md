@@ -65,6 +65,11 @@ go build .
 
     
 # Changelog:
+- v0.6-alpha
+  - Implemented a basic "get currently listening to" once the user has fully authenticated
+    - This is static, meaning you have to refresh the page for it to work, dynamic polling will come at a later date
+  - Removed some pointless binaries from the build pipeline (windows, 386 etc)
+
 - v0.5-alpha
   - Exanding on the user model to contain more personalised information such as username / currently listening to
   - Added mechanisms and updated auth flow to grab required data during the user auth flow process
