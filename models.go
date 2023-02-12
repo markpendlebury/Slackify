@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 type SlackResponse struct {
 	Ok      bool   `json:"ok"`
 	Error   string `json:"error"`
@@ -75,6 +77,8 @@ type UserModel struct {
 	SpotifyUserId            string
 	SlackToken               string
 	SpotifyToken             string
+	SpotifyRefreshToken      string
+	SpotifyTokenExpiresAt    time.Time
 	UserName                 string
 	UserProfilePicture       string
 	UserCurrentlyListeningTo string
