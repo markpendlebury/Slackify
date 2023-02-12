@@ -65,6 +65,9 @@ go build .
 
     
 # Changelog:
+- v0.7-alpha
+  - We are now processing and storing spotify refresh token and expiry datetime
+
 - v0.6-alpha
   - Implemented a basic "get currently listening to" once the user has fully authenticated
     - This is static, meaning you have to refresh the page for it to work, dynamic polling will come at a later date
