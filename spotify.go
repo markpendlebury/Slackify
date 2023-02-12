@@ -1,23 +1,48 @@
 package main
 
 import (
-	"context"
-
-	"github.com/zmb3/spotify/v2"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 )
 
-func GetCurrentlyPlaying(client *spotify.Client) *spotify.CurrentlyPlaying {
+func GetCurrentlyListeningTo(authToken string) string {
+	url := "https://api.spotify.com/v1/me/player/currently-playing"
+	method := "GET"
 
-	// Use our spotify client to get the currently playing track data:
-	if client != nil {
-		currentlyPlaying, err := client.PlayerCurrentlyPlaying(context.Background())
-		if err != nil {
-			println(err.Error())
-		}
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, nil)
 
-		return currentlyPlaying
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", authToken))
+
+	res, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	return nil
+	currentlyListeningTo := SpotifyListeningToModel{}
+
+	_ = json.Unmarshal(body, &currentlyListeningTo)
+
+	currentlyListeningToString := "Nothing"
+
+	if len(currentlyListeningTo.Item.Artists) > 0 {
+		if len(currentlyListeningTo.Item.Name) > 0 {
+			currentlyListeningToString = fmt.Sprintf("%s - %s", currentlyListeningTo.Item.Artists[0].Name, currentlyListeningTo.Item.Name)
+		}
+	}
+
+	return currentlyListeningToString
 
 }
