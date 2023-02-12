@@ -64,10 +64,12 @@ func completeSpotifyAuth(w http.ResponseWriter, r *http.Request) {
 	spotifyUserModel := GetSpotifyUser(spotifyResponse.AccessToken)
 
 	newUser := UserModel{
-		SlackUserId:   slackUserId,
-		SlackTeamId:   slackTeamId,
-		SpotifyUserId: spotifyUserModel.ID,
-		SpotifyToken:  spotifyResponse.AccessToken,
+		SlackUserId:           slackUserId,
+		SlackTeamId:           slackTeamId,
+		SpotifyUserId:         spotifyUserModel.ID,
+		SpotifyToken:          spotifyResponse.AccessToken,
+		SpotifyRefreshToken:   spotifyResponse.RefreshToken,
+		SpotifyTokenExpiresIn: spotifyResponse.ExpiresIn,
 	}
 
 	// Get existing user based on SlackUserId
@@ -77,6 +79,8 @@ func completeSpotifyAuth(w http.ResponseWriter, r *http.Request) {
 		newUser.SlackToken = existingUser.SlackToken
 		newUser.UserName = existingUser.UserName
 		newUser.UserProfilePicture = existingUser.UserProfilePicture
+		newUser.SpotifyRefreshToken = spotifyResponse.RefreshToken
+		newUser.SpotifyTokenExpiresIn = spotifyResponse.ExpiresIn
 		UpdateUser(newUser)
 	} else {
 		// TODO: if we're here we don't have any slack information
