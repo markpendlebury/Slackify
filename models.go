@@ -75,6 +75,8 @@ type UserModel struct {
 	SpotifyUserId            string
 	SlackToken               string
 	SpotifyToken             string
+	SpotifyRefreshToken      string
+	SpotifyTokenExpiresIn    int
 	UserName                 string
 	UserProfilePicture       string
 	UserCurrentlyListeningTo string
